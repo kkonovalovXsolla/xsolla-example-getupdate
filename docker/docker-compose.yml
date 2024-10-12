@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  xsolla_example_getupdate:
+    container_name: xsolla_example_getupdate
+    build:
+      context: build
+      dockerfile: Dockerfile
+      args:
+        - XDEBUG_ENABLED=${XDEBUG_ENABLED}
+    ports:
+      - "${BACKEND_PORT}:8091"
+    stop_grace_period: 0s
+    volumes:
+      - ../:/app/xsolla-example
+      - ./build/extra-php.ini:/usr/local/etc/php/conf.d/extra-php.ini
+    command: > 
+      bash -c "echo 'composer install:' && composer install -v && 
+               echo 'start php server:' && cd public ; php -S 0.0.0.0:8091"
+    environment:
+      PHP_IDE_CONFIG: serverName=xsolla-example
